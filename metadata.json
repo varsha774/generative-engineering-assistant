@@ -1,0 +1,6 @@
+{
+  "name": "Generative Engineering Assistant for Low-Voltage Motor-Starter Panel Design",
+  "description": "AI-for-Design engineering assistant for low-voltage motor-starter panels with deterministic calculations, versioned rules, catalog-constrained selection, and engineer approval.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "rule_id": "R001",
+    "title": "Contactor current compatibility",
+    "description": "Contactor rated AC-3 operational current must meet or exceed calculated required contactor rating (1.20 x FLC).",
+    "category": "Current Sizing",
+    "severity": "ERROR",
+    "condition": "contactor.rated_current >= calculations.required_contactor_current",
+    "source_reference": "DEMO-IEC-60947-4-1 Clause 5.3.5.5 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R002",
+    "title": "Overload range compatibility",
+    "description": "Selected thermal/electronic overload relay setting range [I_min, I_max] must cover the motor full load current (I_min <= FLC <= I_max).",
+    "category": "Motor Protection",
+    "severity": "ERROR",
+    "condition": "overload.range_min <= motor.current_a <= overload.range_max",
+    "source_reference": "DEMO-IEC-60947-4-1 Clause 5.7.2 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R003",
+    "title": "Required protection present",
+    "description": "When motor branch short-circuit protection is required, an approved MPCB or branch protective device must be selected.",
+    "category": "System Safety",
+    "severity": "ERROR",
+    "condition": "protection_required == false || components.has_type('Circuit Protection')",
+    "source_reference": "DEMO-IEC-60947-2 / NFPA 79 Section 7.2 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R004",
+    "title": "Catalog component active",
+    "description": "All selected components must be active in the catalog (no obsolete or discontinued items).",
+    "category": "Catalog Governance",
+    "severity": "ERROR",
+    "condition": "all(c.active == true for c in selected_components)",
+    "source_reference": "Engineering Catalog Governance Standard SOP-CAT-04",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R005",
+    "title": "Voltage rating adequacy",
+    "description": "All power components must have rated operational voltage Ue >= system supply voltage.",
+    "category": "Voltage Sizing",
+    "severity": "ERROR",
+    "condition": "all(c.rated_voltage >= system.voltage_v for c in power_components)",
+    "source_reference": "DEMO-IEC-60947-1 Clause 4.3.1 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R006",
+    "title": "Main Isolator sizing",
+    "description": "Main incoming switch disconnector must be rated for at least 125% of motor full load current.",
+    "category": "Isolation",
+    "severity": "ERROR",
+    "condition": "isolator.rated_current >= 1.25 * motor.current_a",
+    "source_reference": "DEMO-IEC-60204-1 Clause 5.3.2 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R007",
+    "title": "Enclosure spatial allowance",
+    "description": "Total component mounting footprint must not exceed 70% of usable enclosure backplate area to allow wiring ducts and heat dissipation.",
+    "category": "Panel Space & Thermal",
+    "severity": "WARNING",
+    "condition": "space_utilization_pct <= 70.0",
+    "source_reference": "DEMO-IEC-61439-1 Annex D (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  },
+  {
+    "rule_id": "R008",
+    "title": "Control circuit voltage compatibility",
+    "description": "Contactor coil and pilot devices must match control transformer secondary voltage (24V).",
+    "category": "Control Power",
+    "severity": "ERROR",
+    "condition": "contactor.coil_voltage == transformer.secondary_voltage",
+    "source_reference": "DEMO-IEC-60204-1 Clause 9.1.1 (Demo subset)",
+    "version": "2026.1",
+    "active": true
+  }
+]

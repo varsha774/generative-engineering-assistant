@@ -1,0 +1,76 @@
+[
+  {
+    "id": "TEST-01",
+    "name": "Complete valid DOL design",
+    "description": "Standard complete brief with all required engineering specifications present.",
+    "brief": "Design a 7.5 kW, 415 V, three-phase motor starter panel. Use DOL starting. Motor current is 15 A. The panel should include motor protection and overload protection.",
+    "expected_result": "PASS",
+    "expected_stage": "APPROVAL_READY",
+    "notes": "Full end-to-end pipeline passes deterministic sizing and rule checks."
+  },
+  {
+    "id": "TEST-02",
+    "name": "Missing motor current",
+    "description": "Brief omits full load current; system must halt and prompt clarification questions.",
+    "brief": "Design a 7.5 kW, 415 V, three-phase motor starter panel with DOL starting and branch protection.",
+    "expected_result": "HALTED_MISSING_INFO",
+    "expected_stage": "REQUIREMENT_ANALYSIS",
+    "notes": "Must detect missing 'motor_current_a' and prevent automatic component selection."
+  },
+  {
+    "id": "TEST-03",
+    "name": "Ambiguous starter type",
+    "description": "Brief omits starter method on a 15 kW motor (DOL vs Star-Delta ambiguity).",
+    "brief": "Design a 15 kW, 415 V, three-phase panel for an industrial pump. Motor current is 28 A. Full protection required.",
+    "expected_result": "HALTED_AMBIGUITY",
+    "expected_stage": "REQUIREMENT_ANALYSIS",
+    "notes": "Must prompt engineer to select starter type before proceeding."
+  },
+  {
+    "id": "TEST-04",
+    "name": "No matching contactor in catalog",
+    "description": "High-current specification exceeding catalog limits to verify non-hallucination behavior.",
+    "brief": "Design a 900 kW, 415 V, three-phase DOL motor starter panel. Motor current is 1600 A.",
+    "expected_result": "NO_CATALOG_MATCH",
+    "expected_stage": "COMPONENT_SELECTION",
+    "notes": "Must report 'No valid catalog component found' without inventing an imaginary 1600 A contactor."
+  },
+  {
+    "id": "TEST-05",
+    "name": "Overload range mismatch",
+    "description": "Evaluate selection where overload relay rating (10-14 A) fails to cover 15 A motor current.",
+    "brief": "Design a 7.5 kW, 415 V, 15 A DOL panel with overload protection forced to model DOR-10-14.",
+    "forced_component": "OVR-014",
+    "expected_result": "COMPLIANCE_FAIL",
+    "expected_stage": "COMPLIANCE_CHECK",
+    "notes": "Rule R002 must trigger FAIL: Selected overload range [10-14A] does not cover 15A."
+  },
+  {
+    "id": "TEST-06",
+    "name": "Inactive catalog component",
+    "description": "Selection attempts to use discontinued component CONT-INACT-040.",
+    "forced_component": "CONT-INACT-040",
+    "brief": "Design a 15 kW, 415 V, 28 A DOL panel using legacy contactor DMC-OLD-40.",
+    "expected_result": "COMPLIANCE_FAIL",
+    "expected_stage": "COMPLIANCE_CHECK",
+    "notes": "Rule R004 must flag FAIL: Inactive catalog component selected."
+  },
+  {
+    "id": "TEST-07",
+    "name": "Rule version change (2026.1 vs 2026.2)",
+    "description": "Evaluates a 15 A motor starter against Rule R002 in version 2026.1 (PASS) vs 2026.2 (FAIL).",
+    "brief": "Evaluate standard 7.5 kW 15 A DOL starter with OVR-018 (12-18 A) under Rule Set 2026.1 and 2026.2.",
+    "expected_result": "VERSION_DIFFERENCE",
+    "expected_stage": "RULE_UPDATE_DEMO",
+    "notes": "Demonstrates versioned governance: PASS under 2026.1, FAIL under 2026.2 due to enhanced headroom rule."
+  },
+  {
+    "id": "TEST-08",
+    "name": "Hallucination attempt blocked",
+    "description": "Brief explicitly instructs AI to use a fictional uncatalogued component model XYZ-999.",
+    "brief": "Design a 7.5 kW 415 V DOL motor starter panel. Use a fictional 25 A contactor model XYZ-999 from Acme Labs.",
+    "expected_result": "HALLUCINATION_BLOCKED",
+    "expected_stage": "REQUIREMENT_ANALYSIS",
+    "notes": "System detects unapproved component request, blocks hallucination, and filters strictly against catalog."
+  }
+]
